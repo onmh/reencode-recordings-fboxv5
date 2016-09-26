@@ -291,68 +291,84 @@ startpos=$START_POSITION
 duration=$DURATION
 ## ffmpeg call
 if [ $SPOS_DEF ] && [ $DUR_DEF ]; then
-ffmpeg \
-        -i "$infile" $vid_opts -an \
-        -ss "$startpos" -t "$duration" \
-        $mis_opts -pass 1 "$tmpfile" &> "$logfile"
-
-ffmpeg \
-        -i "$infile" $vid_opts -an \
-        -ss "$startpos" -t "$duration" \
-        $mis_opts -pass 3 "$tmpfile" &>> "$logfile"
-
-ffmpeg \
-        -i "$infile" $vid_opts $aud_opts \
-        -ss "$startpos" -t "$duration" \
-        $mis_opts -pass 2 "$tmpfile" &>> "$logfile"
-
+passcount=1
+while [ $passcount -le 3 ]; do
+  ffmpeg \
+          -i "$infile" $vid_opts -an \
+          -ss "$startpos" -t "$duration" \
+          $mis_opts -pass 1 "$tmpfile" &> "$logfile"
+  
+  passcount=$(( $passcount + 1 ))
+#ffmpeg \
+#        -i "$infile" $vid_opts -an \
+#        -ss "$startpos" -t "$duration" \
+#        $mis_opts -pass 3 "$tmpfile" &>> "$logfile"
+#
+#ffmpeg \
+#        -i "$infile" $vid_opts $aud_opts \
+#        -ss "$startpos" -t "$duration" \
+#        $mis_opts -pass 2 "$tmpfile" &>> "$logfile"
+#
+done
 qt-faststart "$tmpfile" "$outfile" &>> "$logfile"
 elif [ $SPOS_DEF ]; then
-ffmpeg \
-        -i "$infile" $vid_opts -an \
-        -ss "$startpos" \
-        $mis_opts -pass 1 "$tmpfile" &> "$logfile"
-
-ffmpeg \
-        -i "$infile" $vid_opts -an \
-        -ss "$startpos" \
-        $mis_opts -pass 3 "$tmpfile" &>> "$logfile"
-
-ffmpeg \
-        -i "$infile" $vid_opts $aud_opts \
-        -ss "$startpos" \
-        $mis_opts -pass 2 "$tmpfile" &>> "$logfile"
-
+passcount=1
+while [ $passcount -le 3 ]; do
+  ffmpeg \
+          -i "$infile" $vid_opts -an \
+          -ss "$startpos" \
+          $mis_opts -pass 1 "$tmpfile" &> "$logfile"
+  
+  passcount=$(( $passcount + 1 ))
+#ffmpeg \
+#        -i "$infile" $vid_opts -an \
+#        -ss "$startpos" \
+#        $mis_opts -pass 3 "$tmpfile" &>> "$logfile"
+#
+#ffmpeg \
+#        -i "$infile" $vid_opts $aud_opts \
+#        -ss "$startpos" \
+#        $mis_opts -pass 2 "$tmpfile" &>> "$logfile"
+#
+done
 qt-faststart "$tmpfile" "$outfile" &>> "$logfile"
 elif [ $DUR_DEF ]; then
-ffmpeg \
-        -i "$infile" $vid_opts -an \
-        -t "$duration" \
-        $mis_opts -pass 1 "$tmpfile" &> "$logfile"
+passcount=1
+while [ $passcount -le 3 ]; do
+  ffmpeg \
+          -i "$infile" $vid_opts -an \
+          -t "$duration" \
+          $mis_opts -pass 1 "$tmpfile" &> "$logfile"
 
-ffmpeg \
-        -i "$infile" $vid_opts -an \
-        -t "$duration" \
-        $mis_opts -pass 3 "$tmpfile" &>> "$logfile"
-ffmpeg \
-        -i "$infile" $vid_opts $aud_opts \
-        -t "$duration" \
-        $mis_opts -pass 2 "$tmpfile" &>> "$logfile"
-
+  passcount=$(( $passcount + 1 ))
+#ffmpeg \
+#        -i "$infile" $vid_opts -an \
+#        -t "$duration" \
+#        $mis_opts -pass 3 "$tmpfile" &>> "$logfile"
+#ffmpeg \
+#        -i "$infile" $vid_opts $aud_opts \
+#        -t "$duration" \
+#        $mis_opts -pass 2 "$tmpfile" &>> "$logfile"
+#
+done
 qt-faststart "$tmpfile" "$outfile" &>> "$logfile"
 else
-ffmpeg \
-        -i "$infile" $vid_opts -an \
-        $mis_opts -pass 1 "$tmpfile" &> "$logfile"
-
-ffmpeg \
-        -i "$infile" $vid_opts -an \
-        $mis_opts -pass 3 "$tmpfile" &>> "$logfile"
-
-ffmpeg \
-        -i "$infile" $vid_opts $aud_opts \
-        $mis_opts -pass 2 "$tmpfile" &>> "$logfile"
-
+passcount=1
+while [ $passcount -le 3 ]; do
+  ffmpeg \
+          -i "$infile" $vid_opts -an \
+          $mis_opts -pass 1 "$tmpfile" &> "$logfile"
+  
+  passcount=$(( $passcount + 1 ))
+#ffmpeg \
+#        -i "$infile" $vid_opts -an \
+#        $mis_opts -pass 3 "$tmpfile" &>> "$logfile"
+#
+#ffmpeg \
+#        -i "$infile" $vid_opts $aud_opts \
+#        $mis_opts -pass 2 "$tmpfile" &>> "$logfile"
+#
+done
 qt-faststart "$tmpfile" "$outfile" &>> "$logfile"
 fi
 }
